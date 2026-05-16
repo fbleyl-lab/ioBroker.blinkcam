@@ -1,0 +1,24 @@
+# --- secrets / never commit ---
+blink.creds
+**/blink.creds
+creds.json
+**/creds.json
+*.token
+*.pem
+
+# --- obsolete Node prototype (dead path; also holds real blink.creds) ---
+etappe1/
+
+# --- runtime / generated ---
+venv/
+**/venv/
+node_modules/
+*.log
+*.tar.gz
+snapshot-test.jpg
+**/snapshot-test.jpg
+
+# --- OS / editor junk ---
+.DS_Store
+*.swp
+*~

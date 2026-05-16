@@ -1,0 +1,83 @@
+{
+  "i18n": true,
+  "type": "panel",
+  "items": {
+    "_hdrLogin": {
+      "type": "header",
+      "size": 2,
+      "text": "Blink account"
+    },
+    "username": {
+      "type": "text",
+      "label": "Blink e-mail",
+      "sm": 12,
+      "md": 6
+    },
+    "password": {
+      "type": "password",
+      "label": "Blink password",
+      "sm": 12,
+      "md": 6
+    },
+    "_2fa": {
+      "type": "staticText",
+      "text": "On first login Blink sends a 2FA code (e-mail/SMS). Enter it ONCE into the state 'blinkcam.<n>.twoFactorCode' (Objects tab). The refresh token is then persisted — no 2FA on later restarts.",
+      "newLine": true
+    },
+    "_hdrPoll": {
+      "type": "header",
+      "size": 2,
+      "text": "Behaviour",
+      "newLine": true
+    },
+    "pollIntervalMinutes": {
+      "type": "number",
+      "label": "Poll interval (minutes)",
+      "min": 1,
+      "max": 1440,
+      "default": 5,
+      "sm": 12,
+      "md": 4,
+      "help": "Battery + state refresh. Higher = easier on battery and the states DB."
+    },
+    "snapshotOnMotion": {
+      "type": "checkbox",
+      "label": "Auto snapshot on motion",
+      "default": true,
+      "sm": 12,
+      "md": 4
+    },
+    "snapWaitSeconds": {
+      "type": "number",
+      "label": "Snapshot wait (seconds)",
+      "min": 5,
+      "max": 60,
+      "default": 18,
+      "sm": 12,
+      "md": 4,
+      "help": "Blink is cloud-only; wait this long after requesting a new image before downloading it."
+    },
+    "_hdrPy": {
+      "type": "header",
+      "size": 2,
+      "text": "Python sidecar (blinkpy)",
+      "newLine": true
+    },
+    "pythonBin": {
+      "type": "text",
+      "label": "Python 3 binary",
+      "default": "python3",
+      "sm": 12,
+      "md": 6,
+      "help": "Used once to create a private venv in the instance data dir."
+    },
+    "blinkpyVersion": {
+      "type": "text",
+      "label": "blinkpy version (pinned)",
+      "default": "0.25.5",
+      "sm": 12,
+      "md": 6,
+      "help": "If Blink changes their flow, bump this and restart to upgrade blinkpy."
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "common": {
+    "name": "blinkcam",
+    "version": "0.1.0",
+    "news": {
+      "0.1.0": {
+        "en": "Initial version: snapshots + battery via blinkpy sidecar, one-time 2FA, token persistence.",
+        "de": "Erste Version: Snapshots + Akku über blinkpy-Sidecar, einmaliges 2FA, Token-Persistenz."
+      }
+    },
+    "title": "Blink Cam",
+    "titleLang": {
+      "en": "Blink Cam",
+      "de": "Blink Cam"
+    },
+    "desc": {
+      "en": "Blink cameras in ioBroker: motion snapshots and battery levels. Wraps the maintained blinkpy library via a Python sidecar (same library Home Assistant uses).",
+      "de": "Blink-Kameras in ioBroker: Bewegungs-Snapshots und Akkustände. Kapselt die gewartete blinkpy-Bibliothek über einen Python-Sidecar (dieselbe Lib wie Home Assistant)."
+    },
+    "authors": [
+      "Felix <felix@bleyl.net>"
+    ],
+    "keywords": [
+      "blink",
+      "camera",
+      "snapshot",
+      "battery"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "blinkcam.png",
+    "enabled": false,
+    "extIcon": "https://raw.githubusercontent.com/felix/ioBroker.blinkcam/main/admin/blinkcam.png",
+    "readme": "https://github.com/felix/ioBroker.blinkcam/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "iot-systems",
+    "compact": false,
+    "connectionType": "cloud",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=5.0.0"
+      }
+    ]
+  },
+  "encryptedNative": [
+    "password"
+  ],
+  "protectedNative": [
+    "password"
+  ],
+  "native": {
+    "username": "",
+    "password": "",
+    "pythonBin": "python3",
+    "blinkpyVersion": "0.25.5",
+    "pollIntervalMinutes": 5,
+    "snapshotOnMotion": true,
+    "snapWaitSeconds": 18
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Logged in and worker alive",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.twoFactorRequired",
+      "type": "state",
+      "common": {
+        "role": "indicator",
+        "name": "One-time 2FA code required — write it to twoFactorCode",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "twoFactorCode",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Enter the one-time Blink 2FA code here",
+        "type": "string",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
+    }
+  ]
+}

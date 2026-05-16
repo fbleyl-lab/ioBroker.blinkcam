@@ -1,0 +1,46 @@
+{
+  "name": "iobroker.blinkcam",
+  "version": "0.1.0",
+  "description": "Blink cameras (snapshots + battery) for ioBroker — wraps the maintained blinkpy library via a Python sidecar.",
+  "author": {
+    "name": "Felix",
+    "email": "felix@bleyl.net"
+  },
+  "homepage": "https://github.com/felix/ioBroker.blinkcam",
+  "license": "MIT",
+  "keywords": [
+    "blink",
+    "camera",
+    "snapshot",
+    "battery",
+    "blinkpy",
+    "ioBroker"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felix/ioBroker.blinkcam"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.1.6"
+  },
+  "main": "main.js",
+  "files": [
+    "admin/",
+    "lib/",
+    "python/",
+    "io-package.json",
+    "main.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "bugs": {
+    "url": "https://github.com/felix/ioBroker.blinkcam/issues"
+  },
+  "readmeFilename": "README.md"
+}
