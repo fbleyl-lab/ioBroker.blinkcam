@@ -1,6 +1,6 @@
 {
   "name": "iobroker.blinkcam",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Blink cameras (snapshots + battery) for ioBroker — wraps the maintained blinkpy library via a Python sidecar.",
   "author": {
     "name": "Felix",

@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "blinkcam",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "news": {
+      "0.1.3": {
+        "en": "Fix: snapshotTrigger button resets to false after firing (manual re-trigger now works).",
+        "de": "Fix: snapshotTrigger-Button springt nach Auslösen auf false zurück (manuelles Wieder-Auslösen geht jetzt)."
+      },
       "0.1.2": {
         "en": "Idempotent 2FA: a second code entry after login is ignored quietly (no more twofa_failed warning).",
         "de": "Idempotentes 2FA: erneute Code-Eingabe nach Login wird still ignoriert (kein twofa_failed mehr)."

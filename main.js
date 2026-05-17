@@ -451,6 +451,8 @@ class BlinkCam extends utils.Adapter {
                 const o = await this.getObjectAsync(`cameras.${camId}`);
                 this.send({ cmd: "snapshot", camera: (o && o.common && o.common.name) || camId });
             }
+            // Reset the momentary button so it can fire again next time.
+            await this.setStateAsync("snapshotTrigger", false, true);
             return;
         }
         const m = local.match(/^cameras\.([^.]+)\.snapshotTrigger$/);
@@ -458,6 +460,8 @@ class BlinkCam extends utils.Adapter {
             const camId = m[1];
             const o = await this.getObjectAsync(`cameras.${camId}`);
             this.send({ cmd: "snapshot", camera: (o && o.common && o.common.name) || camId });
+            // Reset the momentary button (stateChange only fires on change).
+            await this.setStateAsync(`cameras.${camId}.snapshotTrigger`, false, true);
         }
     }
 
