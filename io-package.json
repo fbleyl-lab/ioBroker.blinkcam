@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "blinkcam",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "Precise venv/Python diagnostics in the ioBroker log (names the exact host fix).",
+        "de": "Präzise venv/Python-Diagnose im ioBroker-Log (nennt den exakten Host-Fix)."
+      },
       "0.1.0": {
         "en": "Initial version: snapshots + battery via blinkpy sidecar, one-time 2FA, token persistence.",
         "de": "Erste Version: Snapshots + Akku über blinkpy-Sidecar, einmaliges 2FA, Token-Persistenz."

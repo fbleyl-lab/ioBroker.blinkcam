@@ -121,17 +121,56 @@ class BlinkCam extends utils.Adapter {
         }
 
         const pyBin = String(this.config.pythonBin || "python3");
+        const dbg = (label, r) =>
+            this.log.error(
+                `${label}: status=${r.status} ` +
+                `err=${r.error ? r.error.message : "-"} ` +
+                `stdout=${(r.stdout || "").trim() || "-"} ` +
+                `stderr=${(r.stderr || "").trim() || "-"}`
+            );
+
+        // 0) Is python3 even there?
+        const ver = spawnSync(pyBin, ["--version"], { encoding: "utf8" });
+        if (ver.error || ver.status !== 0) {
+            dbg(`Python not runnable ('${pyBin}')`, ver);
+            this.log.error(
+                `Fix on the ioBroker host: install Python 3 ` +
+                `(Debian/Ubuntu: sudo apt-get install -y python3 python3-venv python3-pip), ` +
+                `then restart this instance.`
+            );
+            return null;
+        }
         this.log.info(
-            `Provisioning venv at ${this.venvDir} with blinkpy==${want} (one-time, may take ~1 min)…`
+            `Python OK: ${(ver.stdout || ver.stderr || "").trim()} — ` +
+            `provisioning venv at ${this.venvDir} with blinkpy==${want} (one-time, ~1 min)…`
         );
+
+        // 1) Is the venv/ensurepip module present? (Debian ships python3
+        //    WITHOUT it by default — this is the usual failure.)
+        const ep = spawnSync(pyBin, ["-c", "import ensurepip, venv"], {
+            encoding: "utf8",
+        });
+        if (ep.status !== 0) {
+            dbg("venv/ensurepip module missing", ep);
+            this.log.error(
+                "ROOT CAUSE: the Python 'venv' module is not installed on the " +
+                "ioBroker host. Fix (one-time, needs host root):  " +
+                "sudo apt-get update && sudo apt-get install -y python3-venv python3-pip  " +
+                "— then restart the blinkcam instance. (Other distros: install the " +
+                "python3 venv/pip packages accordingly.)"
+            );
+            return null;
+        }
 
         const mk = spawnSync(pyBin, ["-m", "venv", this.venvDir], {
             encoding: "utf8",
         });
-        if (mk.status !== 0) {
+        if (mk.status !== 0 || mk.error) {
+            dbg(`'${pyBin} -m venv' failed`, mk);
             this.log.error(
-                `'${pyBin} -m venv' failed: ${mk.stderr || mk.error || "unknown"}. ` +
-                `Install Python 3 + the venv module on the host.`
+                "Fix on the ioBroker host (one-time, needs root):  " +
+                "sudo apt-get update && sudo apt-get install -y python3-venv python3-pip  " +
+                "— then restart the blinkcam instance."
             );
             return null;
         }
@@ -140,9 +179,11 @@ class BlinkCam extends utils.Adapter {
             ["-m", "pip", "install", "--quiet", "--upgrade", `blinkpy==${want}`],
             { encoding: "utf8" }
         );
-        if (pip.status !== 0) {
+        if (pip.status !== 0 || pip.error) {
+            dbg(`pip install blinkpy==${want} failed`, pip);
             this.log.error(
-                `pip install blinkpy==${want} failed: ${pip.stderr || pip.error || "unknown"}`
+                "If this is a network/proxy issue, ensure the host can reach " +
+                "pypi.org; otherwise install build deps. Then restart the instance."
             );
             return null;
         }
