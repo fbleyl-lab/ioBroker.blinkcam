@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "blinkcam",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "en": "Poll interval is now in SECONDS (default 30 = blinkpy's own default, min 30 for account safety). Polling is a Blink cloud call and does NOT drain the camera battery (only the manual snapshot wakes the camera) — help text corrected. Legacy minute setting still honored on existing instances.",
+        "de": "Poll-Intervall jetzt in SEKUNDEN (Default 30 = blinkpy-Eigendefault, Min 30 zum Account-Schutz). Pollen ist ein Blink-Cloud-Call und zieht NICHT am Kamera-Akku (nur der manuelle Snapshot weckt die Kamera) — Hilfetext korrigiert. Alte Minuten-Einstellung bei Bestandsinstanzen weiter gültig."
+      },
       "0.2.0": {
         "en": "Tile image now uses Blink's motion thumbnail (the app image showing the person) instead of an on-demand snap. New setting 'imageSource' (thumbnail|snapshot, default thumbnail) — backward compatible. Manual snapshotTrigger still forces a fresh snap_picture.",
         "de": "Kachel zeigt jetzt Blinks Bewegungs-Thumbnail (das App-Bild mit der Person) statt eines Aufwach-Fotos. Neue Option 'imageSource' (thumbnail|snapshot, Default thumbnail) — abwärtskompatibel. Manueller snapshotTrigger erzwingt weiter ein frisches snap_picture."
@@ -75,6 +79,7 @@
     "password": "",
     "pythonBin": "python3",
     "blinkpyVersion": "0.25.5",
+    "pollIntervalSeconds": 30,
     "pollIntervalMinutes": 5,
     "snapshotOnMotion": true,
     "snapWaitSeconds": 18,

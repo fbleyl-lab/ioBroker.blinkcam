@@ -30,15 +30,15 @@
       "text": "Behaviour",
       "newLine": true
     },
-    "pollIntervalMinutes": {
+    "pollIntervalSeconds": {
       "type": "number",
-      "label": "Poll interval (minutes)",
-      "min": 1,
-      "max": 1440,
-      "default": 5,
+      "label": "Poll interval (seconds)",
+      "min": 30,
+      "max": 86400,
+      "default": 30,
       "sm": 12,
       "md": 4,
-      "help": "Battery + state refresh. Higher = easier on battery and the states DB."
+      "help": "One Blink cloud poll = battery + status + motion + thumbnail together. It does NOT wake the camera, so it does NOT drain the camera battery (only the manual snapshot button wakes it). 30 s is blinkpy's own default (same as Home Assistant) and is safe; the minimum is 30 s to avoid hammering Blink's unofficial API. Lower = fresher motion image."
     },
     "snapshotOnMotion": {
       "type": "checkbox",

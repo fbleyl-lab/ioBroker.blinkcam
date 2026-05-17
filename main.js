@@ -348,12 +348,22 @@ class BlinkCam extends utils.Adapter {
 
     startPolling() {
         if (this.pollTimer) this.clearInterval(this.pollTimer);
-        const min = Math.max(1, Number(this.config.pollIntervalMinutes) || 5);
+        const sec = Number(this.config.pollIntervalSeconds);
+        let secs;
+        if (sec && sec > 0) {
+            // Untergrenze 30 s = blinkpy-Default (Account-Schutz, kein Hämmern
+            // einer inoffiziellen API). Poll = Cloud-Call, weckt die Kamera nicht.
+            secs = Math.max(30, sec);
+        } else {
+            // Legacy-Instanzen ohne Sekunden-Feld: altes Minuten-Feld nutzen.
+            const min = Math.max(1, Number(this.config.pollIntervalMinutes) || 5);
+            secs = min * 60;
+        }
         this.pollTimer = this.setInterval(
             () => this.send({ cmd: "poll" }),
-            min * 60000
+            secs * 1000
         );
-        this.log.info(`Polling every ${min} min.`);
+        this.log.info(`Polling every ${secs} s.`);
     }
 
     cid(name) {

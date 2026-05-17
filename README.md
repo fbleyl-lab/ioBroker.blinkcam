@@ -74,7 +74,14 @@ The `snapshot` state auto-updates when Blink has a new image (motion) if
 
 The manual `snapshotTrigger` button always forces a fresh `snap_picture`
 regardless of `imageSource` (use it to get a true "now" photo on demand).
-Battery/state refresh on the configured poll interval (default 5 min).
+
+**Poll interval** is in **seconds** (`pollIntervalSeconds`, default **30**,
+minimum 30). One poll is a single Blink cloud call returning battery + status +
+motion + thumbnail together. It does **not** wake the camera and does **not**
+drain the camera battery (only the manual snapshot wakes it). 30 s is blinkpy's
+own default (same as Home Assistant) — safe; the 30 s floor avoids hammering
+Blink's unofficial API. Existing instances that still have the old
+`pollIntervalMinutes` keep using it until you set the seconds value.
 
 ## Sharing with a colleague
 
