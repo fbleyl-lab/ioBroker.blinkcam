@@ -39,6 +39,7 @@ class BlinkCam extends utils.Adapter {
         this.workerRestarts = 0;
         this.knownCameras = new Set();
         this.lastMotion = {};
+        this.lastThumb = {};
         this.on("ready", this.onReady.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
         this.on("unload", this.onUnload.bind(this));
@@ -394,6 +395,13 @@ class BlinkCam extends utils.Adapter {
         return id;
     }
 
+    // Welches Bild die Kachel zeigt: "thumbnail" = Blinks Bewegungs-Thumbnail
+    // (App-Bild, zeigt die Person; Default) · "snapshot" = snap_picture
+    // (frisches "Jetzt"-Foto, altes Verhalten). Abwärtskompatibel per Config.
+    imgCmd() {
+        return this.config.imageSource === "snapshot" ? "snapshot" : "thumbnail";
+    }
+
     async updateCameras(cams) {
         for (const c of cams) {
             const id = await this.ensureCameraObjects(c.name);
@@ -408,12 +416,18 @@ class BlinkCam extends utils.Adapter {
             await this.setStateChangedAsync(`${b}.motionDetected`, motion, true);
             await this.setStateAsync(`${b}.lastUpdate`, Date.now(), true);
 
-            // Rising-edge motion -> auto snapshot (configurable)
-            const prev = this.lastMotion[id] || false;
+            // Bild aktualisieren, wenn Blink ein neues Bewegungs-Thumbnail hat
+            // (thumbnail-URL wechselt = neue Bewegung) ODER bei Motion-Flanke.
+            const prevThumb = this.lastThumb[id];
+            const newThumb = c.thumbnail || null;
+            this.lastThumb[id] = newThumb;
+            const prevMotion = this.lastMotion[id] || false;
             this.lastMotion[id] = motion;
-            if (this.config.snapshotOnMotion && motion && !prev) {
-                this.log.info(`Motion on '${c.name}' -> requesting snapshot.`);
-                this.send({ cmd: "snapshot", camera: c.name });
+            const thumbChanged = prevThumb !== undefined && newThumb && newThumb !== prevThumb;
+            const motionEdge = motion && !prevMotion;
+            if (this.config.snapshotOnMotion && (thumbChanged || motionEdge)) {
+                this.log.info(`'${c.name}': neues Bild anfordern (${this.imgCmd()}).`);
+                this.send({ cmd: this.imgCmd(), camera: c.name });
             }
         }
     }

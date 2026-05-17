@@ -42,10 +42,23 @@
     },
     "snapshotOnMotion": {
       "type": "checkbox",
-      "label": "Auto snapshot on motion",
+      "label": "Auto-update image on motion",
       "default": true,
       "sm": 12,
-      "md": 4
+      "md": 4,
+      "help": "Refresh the camera image when Blink reports a new motion thumbnail."
+    },
+    "imageSource": {
+      "type": "select",
+      "label": "Camera image source",
+      "default": "thumbnail",
+      "options": [
+        { "label": "Blink motion thumbnail (app image, shows the person)", "value": "thumbnail" },
+        { "label": "On-demand snapshot (snap_picture, fresh 'now' photo)", "value": "snapshot" }
+      ],
+      "sm": 12,
+      "md": 4,
+      "help": "Thumbnail = same image as the Blink app (recommended). Snapshot = wakes the camera for a fresh photo (often empty, ~10-30s cloud delay)."
     },
     "snapWaitSeconds": {
       "type": "number",

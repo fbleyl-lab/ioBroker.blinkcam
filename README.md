@@ -61,9 +61,20 @@ Per camera under `blinkcam.<n>.cameras.<name>.`:
 
 Global: `blinkcam.<n>.snapshotTrigger` snapshots all cameras at once.
 
-Snapshots update automatically on motion when *Auto snapshot on motion* is on
-(rising edge), and on demand via the trigger states. Battery/state refresh on
-the configured poll interval (default 5 min).
+The `snapshot` state auto-updates when Blink has a new image (motion) if
+*Auto-update image on motion* is on, and on the poll interval.
+
+**Image source (`imageSource` setting):**
+- `thumbnail` (default, recommended): Blink's **motion thumbnail** — the same
+  picture the Blink app shows (a frame from the motion event, so you see the
+  person). Updates when Blink produces a new motion thumbnail.
+- `snapshot`: an on-demand `snap_picture` — commands the camera to wake and take
+  a *fresh* photo. Because Blink cameras are battery/cloud (~10–30 s wake delay),
+  this is usually an empty scene (the person already left). Old behaviour.
+
+The manual `snapshotTrigger` button always forces a fresh `snap_picture`
+regardless of `imageSource` (use it to get a true "now" photo on demand).
+Battery/state refresh on the configured poll interval (default 5 min).
 
 ## Sharing with a colleague
 

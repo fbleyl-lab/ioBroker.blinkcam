@@ -16,7 +16,8 @@ Commands (stdin):
   {"cmd":"login","username":"..","password":".."}   start/refresh session
   {"cmd":"twofa","code":"123456"}                    submit one-time 2FA code
   {"cmd":"poll"}                                     refresh + emit battery/state
-  {"cmd":"snapshot","camera":"Name"}                 new thumbnail -> jpeg base64
+  {"cmd":"snapshot","camera":"Name"}                 snap_picture (fresh "now" foto)
+  {"cmd":"thumbnail","camera":"Name"}                Blink motion thumbnail (app image)
   {"cmd":"ping"}                                     liveness
   {"cmd":"shutdown"}                                 clean exit
 
@@ -266,6 +267,40 @@ class Worker:
             "bytes": len(data),
         })
 
+    async def cmd_thumbnail(self, camera):
+        # Blinks Bewegungs-Thumbnail (das Bild aus der Blink-App: zeigt die
+        # letzte Bewegung/Person). KEIN snap_picture -> kein "Aufwach-Foto".
+        # blinkpy: refresh() aktualisiert cam.thumbnail; get_media() lädt es.
+        if not self.blink or not self.blink.available:
+            emit({"event": "error", "where": "thumbnail",
+                  "msg": "not_logged_in"})
+            return
+        cam = self.blink.cameras.get(camera)
+        if cam is None:
+            emit({"event": "error", "where": "thumbnail",
+                  "msg": "unknown_camera:%s" % camera})
+            return
+        try:
+            await self.blink.refresh(force=True)   # cam.thumbnail = letzte Bewegung
+            resp = await cam.get_media()            # lädt cam.thumbnail (kein snap)
+            if not resp or resp.status != 200:
+                emit({"event": "error", "where": "thumbnail",
+                      "msg": "media_http_%s" % (resp.status if resp else "none")})
+                return
+            data = await resp.read()
+        except Exception as e:  # noqa: BLE001
+            emit({"event": "error", "where": "thumbnail", "msg": str(e)})
+            return
+        # Gleiches Event-Schema wie snapshot -> Adapter/Brain/Display unverändert.
+        emit({
+            "event": "snapshot",
+            "camera": camera,
+            "ts": int(time.time()),
+            "jpeg_b64": base64.b64encode(data).decode("ascii"),
+            "bytes": len(data),
+            "src": "thumbnail",
+        })
+
     async def close(self):
         try:
             if self.session and not self.session.closed:
@@ -303,6 +338,8 @@ async def main():
                 await worker.cmd_poll()
             elif cmd == "snapshot":
                 await worker.cmd_snapshot(msg.get("camera"))
+            elif cmd == "thumbnail":
+                await worker.cmd_thumbnail(msg.get("camera"))
             elif cmd == "shutdown":
                 break
             else:
