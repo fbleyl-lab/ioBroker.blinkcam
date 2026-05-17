@@ -204,6 +204,11 @@ class Worker:
             emit({"event": "error", "where": "twofa",
                   "msg": "no_login_in_progress"})
             return
+        if getattr(self.blink, "available", False):
+            # Already authenticated — 2FA state is consumed. Idempotent.
+            emit({"event": "logged_in", "via": "already",
+                  "cameras": list(self.blink.cameras.keys())})
+            return
         try:
             ok = await self.blink.send_2fa_code(str(code))
         except Exception as e:  # noqa: BLE001

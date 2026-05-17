@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "blinkcam",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "Idempotent 2FA: a second code entry after login is ignored quietly (no more twofa_failed warning).",
+        "de": "Idempotentes 2FA: erneute Code-Eingabe nach Login wird still ignoriert (kein twofa_failed mehr)."
+      },
       "0.1.1": {
         "en": "Precise venv/Python diagnostics in the ioBroker log (names the exact host fix).",
         "de": "Präzise venv/Python-Diagnose im ioBroker-Log (nennt den exakten Host-Fix)."

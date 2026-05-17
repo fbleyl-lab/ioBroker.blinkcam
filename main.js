@@ -433,11 +433,17 @@ class BlinkCam extends utils.Adapter {
 
         if (local === "twoFactorCode") {
             const code = String(state.val || "").trim();
-            if (code) {
-                this.log.info("Submitting 2FA code…");
-                this.send({ cmd: "twofa", code });
-                await this.setStateAsync("twoFactorCode", "", true); // don't keep it
+            if (!code) return;
+            if (this.loggedIn) {
+                // Already authenticated — a second code would just fail in
+                // blinkpy (2FA state already consumed). Ignore quietly.
+                this.log.debug("Already logged in — ignoring 2FA code entry.");
+                await this.setStateAsync("twoFactorCode", "", true);
+                return;
             }
+            this.log.info("Submitting 2FA code…");
+            this.send({ cmd: "twofa", code });
+            await this.setStateAsync("twoFactorCode", "", true); // don't keep it
             return;
         }
         if (local === "snapshotTrigger") {
